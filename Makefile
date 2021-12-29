@@ -5,7 +5,7 @@ host-cert-expire=always:forever
 
 user=${USER}
 team=team-default
-remote-host=default
+remote-host=remote-host
 
 main:
 	@echo Usage:
@@ -51,12 +51,12 @@ reset:
 
 create-machine:
 	multipass launch -vvvv \
-		--name remote-host-01 \
+		--name ${remote-host} \
 		--network en0 \
 		--cloud-init cloud-init/config.yml \
 		focal
 	multipass list
 
 remove-machine:
-	multipass delete remote-host-01
+	multipass delete ${remote-host}
 	multipass purge
