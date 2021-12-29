@@ -23,3 +23,4 @@ tail -f /var/log/auth.log | grep --line-buffered "sshd"
 - https://smallstep.com/blog/use-ssh-certificates/
 - https://berndbausch.medium.com/ssh-certificates-a45bdcdfac39
 - https://www.vaultproject.io/docs/secrets/ssh/signed-ssh-certificates
+- https://engineering.fb.com/2016/09/12/security/scalable-and-secure-access-with-ssh/

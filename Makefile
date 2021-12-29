@@ -10,27 +10,37 @@ main:
 	@echo - generate-trusted-host-cert: generate trusted host-cert
 	@echo - sign-trusted-host-cert: sign trusted host-cert
 
-bootstrap: clean reset generate-trusted-root-ca generate-trusted-host-cert
+bootstrap: clean reset generate-trusted-root-ca generate-trusted-host-cert sign-trusted-host-cert
 
 sign:
-	ssh-keygen -s ${trusted-ca} -I user-`uuidgen` -n ubuntu -V ${expire} ${HOME}/.ssh/id_ed25519.pub
-	ssh-keygen -Lf ${HOME}/.ssh/id_ed25519-cert.pub
+	@ssh-keygen -s ${trusted-ca} \
+		-I user-`uuidgen` \
+		-n ubuntu,team-ca \
+		-V ${expire} \
+		${HOME}/.ssh/id_ed25519.pub
+	@ssh-keygen -Lf ${HOME}/.ssh/id_ed25519-cert.pub
 
 generate-trusted-root-ca:
-	ssh-keygen -t ed25519 -C "root-ca" -f ${trusted-ca}
-	chmod 0400 ${trusted-ca}
+	@ssh-keygen -t ed25519 -C "root-ca" -f ${trusted-ca}
+	@chmod 0400 ${trusted-ca}
 
-generate-trusted-host-cert: sign-trusted-host-cert
-	ssh-keygen -t ed25519 -C "root-ca" -f TrustedHost/host_key
+generate-trusted-host-cert:
+	@ssh-keygen -t ed25519 -C "root-ca" -f TrustedHost/host_key
 
 sign-trusted-host-cert:
-	ssh-keygen -h -s ${trusted-ca} -I host-`uuidgen` -n *.multipass.local -V ${host-cert-expire} TrustedHost/host_key.pub
+	@ssh-keygen \
+		-h -s ${trusted-ca} \
+		-I host-`uuidgen` \
+		-n localdomain,multipass.local \
+		-V ${host-cert-expire} \
+		TrustedHost/host_key.pub
+	@ssh-keygen -Lf TrustedHost/host_key-cert.pub
 
 clean:
-	rm ~/.ssh/id_rsa-cert.pub
+	rm ~/.ssh/id_ed25519-cert.pub | true
 
 reset:
-	rm {TrustedCA,TrustedHost}/*
+	rm {TrustedCA,TrustedHost}/* | true
 
 create-machine:
 	multipass launch -vvvv \
