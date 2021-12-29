@@ -1,5 +1,5 @@
 trusted-ca=TrustedCA/root-ca
-expire=+30m
+expire=+1m
 host-cert-expire=always:forever
 # host-cert-expire=+500w
 
@@ -16,7 +16,7 @@ bootstrap: clean reset generate-trusted-root-ca generate-trusted-host-cert sign-
 sign:
 	@ssh-keygen -s ${trusted-ca} \
 		-I user-`uuidgen` \
-		-n ubuntu,team-ca \
+		-n team-ca \
 		-V ${expire} \
 		${HOME}/.ssh/id_ed25519.pub
 	@ssh-keygen -Lf ${HOME}/.ssh/id_ed25519-cert.pub
