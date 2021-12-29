@@ -50,13 +50,7 @@ reset:
 	rm {TrustedCA,TrustedHost}/* | true
 
 create-machine:
-	multipass launch -vvvv \
-		--name ${remote-host} \
-		--network en0 \
-		--cloud-init cloud-init/config.yml \
-		focal
-	multipass list
+	vagrant up --provider=virtualbox
 
 remove-machine:
-	multipass delete ${remote-host}
-	multipass purge
+	vagrant destroy -f
