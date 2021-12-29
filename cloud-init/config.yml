@@ -1,0 +1,44 @@
+#cloud-config
+
+write_files:
+  # TrustedCA/root-ca.pub
+  - path: /etc/ssh/trusted-user-ca-keys.pem
+    permissions: "0400"
+    # permissions: "0640"
+    content: |
+      ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINnJXEXgUe0+8j6y8kTIfqehmxT99ZHKwjCNqA3r5Lsd root-ca
+
+  # TrustedHost/host_key
+  - path: /etc/ssh/trusted-host-key
+    permissions: "0400"
+    # permissions: "0640"
+    content: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+      QyNTUxOQAAACCP8il9W3Jty0Co3OPc4WT7PToJ5yMQP3DBxxY5QoSVdgAAAJDvEhhy7xIY
+      cgAAAAtzc2gtZWQyNTUxOQAAACCP8il9W3Jty0Co3OPc4WT7PToJ5yMQP3DBxxY5QoSVdg
+      AAAECTeHMoPeduUPxRx8rvISCLFCkHOLJZjnkiQNTfkYLuqY/yKX1bcm3LQKjc49zhZPs9
+      OgnnIxA/cMHHFjlChJV2AAAAB3Jvb3QtY2EBAgMEBQY=
+      -----END OPENSSH PRIVATE KEY-----
+
+  # TrustedHost/host_key-cert.pub
+  - path: /etc/ssh/trusted-host-rsa-cert.pub
+    permissions: "0400"
+    # permissions: "0640"
+    content: |
+      ssh-ed25519-cert-v01@openssh.com AAAAIHNzaC1lZDI1NTE5LWNlcnQtdjAxQG9wZW5zc2guY29tAAAAIBn04tJ+h+cFHu39Jgtz2sU5ptJysqNZl/lzT4o2ltl1AAAAII/yKX1bcm3LQKjc49zhZPs9OgnnIxA/cMHHFjlChJV2AAAAAAAAAAAAAAACAAAAKWhvc3QtQjYxNjZFODctODc2My00MUVCLUFGQTAtMjc5RjdCN0VBNjIyAAAAFQAAABEqLm11bHRpcGFzcy5sb2NhbAAAAABhy/WgAAAAAHPSOBAAAAAAAAAAAAAAAAAAAAAzAAAAC3NzaC1lZDI1NTE5AAAAINnJXEXgUe0+8j6y8kTIfqehmxT99ZHKwjCNqA3r5LsdAAAAUwAAAAtzc2gtZWQyNTUxOQAAAEBTOw9B/nV1mgtb9HCbsizGNFJKKCwTzG//9lQMH6dZR6SqYyPs8vphSQCwWMDzBbdEVzhi6oxtYn7G9SjamrID root-ca
+
+  - path: /etc/ssh/sshd_config.d/00-vault-config.conf
+    content: |
+      # AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+
+      # For client keys
+      CASignatureAlgorithms ^ssh-rsa
+      TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+
+      # For host keys
+      HostKey /etc/ssh/trusted-host-key
+      HostCertificate /etc/ssh/trusted-host-rsa-cert.pub
+
+# runcmd:
+#   - systemctl reload sshd
