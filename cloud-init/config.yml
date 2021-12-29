@@ -1,6 +1,25 @@
 #cloud-config
 
 write_files:
+  - path: /etc/ssh/sshd_config.d/00-vault-config.conf
+    content: |
+      AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+
+      # For client keys
+      CASignatureAlgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
+      TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
+
+      # For host keys
+      HostKey /etc/ssh/trusted-host-key
+      HostCertificate /etc/ssh/trusted-host-rsa-cert.pub
+
+  # AuthorizedPrincipalsFile
+  - path: /etc/ssh/auth_principals/ubuntu
+    content: |
+      team-ca
+      team-devops
+      team-infra
+
   # TrustedCA/root-ca.pub
   - path: /etc/ssh/trusted-user-ca-keys.pem
     permissions: "0400"
@@ -13,7 +32,7 @@ write_files:
     permissions: "0400"
     # permissions: "0640"
     content: |
-      ssh-ed25519-cert-v01@openssh.com AAAAIHNzaC1lZDI1NTE5LWNlcnQtdjAxQG9wZW5zc2guY29tAAAAIMqb/2XWts2AHHx2gEB1fC/pE4psGewudXanwMJaaFOoAAAAIGzGeVWueCwj5kImLlcvJHXwYIu/YwZ7zKMTBetByHhnAAAAAAAAAAAAAAACAAAAKWhvc3QtMjYyRjU4MkEtMzQ4My00QkE2LTk4NTMtQTk2NzcxNDdGNEM0AAAAIgAAAAtsb2NhbGRvbWFpbgAAAA9tdWx0aXBhc3MubG9jYWwAAAAAYcwOAAAAAABz0lBuAAAAAAAAAAAAAAAAAAAAMwAAAAtzc2gtZWQyNTUxOQAAACB86wiksaGmYy4caHzHmCuZKNwbN9kNlOPtufLUXydHSgAAAFMAAAALc3NoLWVkMjU1MTkAAABABF+XMT1Qaw37zWjGSM82s6MPf5jxf0Uzl8a5mcby6UUoiaMzECmKm730UpeN0vIQsc5DdPSGLVIcs7NQjsMpAw== root-ca
+      ssh-ed25519-cert-v01@openssh.com AAAAIHNzaC1lZDI1NTE5LWNlcnQtdjAxQG9wZW5zc2guY29tAAAAIJOcGPdXjZBl0KtR9b5oSJwLrbRFhf20N7J7/OJEc6WRAAAAIGzGeVWueCwj5kImLlcvJHXwYIu/YwZ7zKMTBetByHhnAAAAAAAAAAEAAAACAAAAHnJlbW90ZS1ob3N0LTAxLm11bHRpcGFzcy5sb2NhbAAAACIAAAAecmVtb3RlLWhvc3QtMDEubXVsdGlwYXNzLmxvY2FsAAAAAAAAAAD//////////wAAAAAAAAAAAAAAAAAAADMAAAALc3NoLWVkMjU1MTkAAAAgfOsIpLGhpmMuHGh8x5grmSjcGzfZDZTj7bny1F8nR0oAAABTAAAAC3NzaC1lZDI1NTE5AAAAQFNisRE+F0z5ffup0MYVUnTiTTllDB2vZo6lzS/gb1u+PTAdWP64SHabk3rbpOEanvBQylDvPHBPohBBAUkrsgc= root-ca
 
   # TrustedHost/host_key
   - path: /etc/ssh/trusted-host-key
@@ -27,18 +46,6 @@ write_files:
       AAAEAYJGAVKeCNn9Yqs+6Wj23JQb5ODhvHwkgCaDagXeThIGzGeVWueCwj5kImLlcvJHXw
       YIu/YwZ7zKMTBetByHhnAAAAB3Jvb3QtY2EBAgMEBQY=
       -----END OPENSSH PRIVATE KEY-----
-
-  - path: /etc/ssh/sshd_config.d/00-vault-config.conf
-    content: |
-      # AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
-
-      # For client keys
-      CASignatureAlgorithms ^ssh-rsa
-      TrustedUserCAKeys /etc/ssh/trusted-user-ca-keys.pem
-
-      # For host keys
-      HostKey /etc/ssh/trusted-host-key
-      HostCertificate /etc/ssh/trusted-host-rsa-cert.pub
 
 runcmd:
   - systemctl reload sshd

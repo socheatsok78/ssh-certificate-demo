@@ -1,6 +1,7 @@
 trusted-ca=TrustedCA/root-ca
 expire=+30m
-host-cert-expire=+500w
+host-cert-expire=always:forever
+# host-cert-expire=+500w
 
 main:
 	@echo Usage:
@@ -29,10 +30,12 @@ generate-trusted-host-cert:
 
 sign-trusted-host-cert:
 	@ssh-keygen \
-		-h -s ${trusted-ca} \
-		-I host-`uuidgen` \
-		-n localdomain,multipass.local \
+		-s ${trusted-ca} \
+		-h \
+		-I remote-host-01.multipass.local \
+		-n remote-host-01.multipass.local \
 		-V ${host-cert-expire} \
+		-z 1 \
 		TrustedHost/host_key.pub
 	@ssh-keygen -Lf TrustedHost/host_key-cert.pub
 
