@@ -3,6 +3,10 @@ expire=+1m
 host-cert-expire=always:forever
 # host-cert-expire=+500w
 
+user=${USER}
+team=team-default
+remote-host=default
+
 main:
 	@echo Usage:
 	@echo - sign: sign my public key with root-ca private key
@@ -15,8 +19,8 @@ bootstrap: clean reset generate-trusted-root-ca generate-trusted-host-cert sign-
 
 sign:
 	@ssh-keygen -s ${trusted-ca} \
-		-I user-`uuidgen` \
-		-n team-ca \
+		-I ${user} \
+		-n ${team} \
 		-V ${expire} \
 		${HOME}/.ssh/id_ed25519.pub
 	@ssh-keygen -Lf ${HOME}/.ssh/id_ed25519-cert.pub
@@ -32,12 +36,14 @@ sign-trusted-host-cert:
 	@ssh-keygen \
 		-s ${trusted-ca} \
 		-h \
-		-I remote-host-01.multipass.local \
-		-n remote-host-01.multipass.local \
+		-I ${remote-host}.multipass.local \
+		-n ${remote-host}.multipass.local \
 		-V ${host-cert-expire} \
 		-z 1 \
 		TrustedHost/host_key.pub
-	@ssh-keygen -Lf TrustedHost/host_key-cert.pub
+	@mkdir -p SignedHost/${remote-host}.multipass.local
+	@mv TrustedHost/host_key-cert.pub SignedHost/${remote-host}.multipass.local/${remote-host}-cert.pub
+	@ssh-keygen -Lf SignedHost/${remote-host}.multipass.local/${remote-host}-cert.pub
 
 clean:
 	rm ~/.ssh/id_ed25519-cert.pub | true
