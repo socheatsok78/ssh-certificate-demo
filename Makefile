@@ -41,9 +41,7 @@ sign-trusted-host-cert:
 		-V ${host-cert-expire} \
 		-z 1 \
 		TrustedHost/host_key.pub
-	@mkdir -p SignedHost/${remote-host}.multipass.local
-	@mv TrustedHost/host_key-cert.pub SignedHost/${remote-host}.multipass.local/${remote-host}-cert.pub
-	@ssh-keygen -Lf SignedHost/${remote-host}.multipass.local/${remote-host}-cert.pub
+	@ssh-keygen -Lf TrustedHost/host_key-cert.pub
 
 clean:
 	rm ~/.ssh/id_ed25519-cert.pub | true
