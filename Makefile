@@ -36,12 +36,13 @@ sign-trusted-host-cert:
 	@ssh-keygen \
 		-s ${trusted-ca} \
 		-h \
-		-I ${remote-host}.multipass.local \
-		-n ${remote-host}.multipass.local \
+		-I ${remote-host}.vagrant.local \
+		-n ${remote-host}.vagrant.local \
 		-V ${host-cert-expire} \
 		-z 1 \
 		TrustedHost/host_key.pub
-	@ssh-keygen -Lf TrustedHost/host_key-cert.pub
+	@mv TrustedHost/host_key-cert.pub SignedHosts/${remote-host}-cert.pub
+	@ssh-keygen -Lf SignedHosts/${remote-host}-cert.pub
 
 clean:
 	rm ~/.ssh/id_ed25519-cert.pub | true
