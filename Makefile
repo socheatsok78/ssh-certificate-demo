@@ -1,10 +1,11 @@
 trusted-ca=TrustedCA/root-ca
 expire=+1m
-host-cert-expire=always:forever
-# host-cert-expire=+500w
 
 user=${USER}
 team=team-default
+
+# host-cert-expire=+500w
+host-cert-expire=always:forever
 remote-host=remote-host
 
 main:
