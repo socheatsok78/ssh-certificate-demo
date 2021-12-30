@@ -6,8 +6,10 @@ If you’re not using SSH certificates you’re doing SSH wrong
 
 ### Add `cert-authority` to `known_hosts`
 
+Copy the `root-ca` public key and add it to the `known_hosts` file by append `@cert-authority` and `list-of-host` in front of the public key.
+
 ```
-@cert-authority *.multipass.local ssh-ed25519 AAAAC3...
+@cert-authority *.vagrant.local ssh-ed25519 AAAAC3...
 ```
 
 ## Troubleshooting
