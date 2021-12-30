@@ -17,7 +17,7 @@ main:
 
 bootstrap: clean reset generate-trusted-root-ca generate-trusted-host-cert sign-trusted-host-cert
 
-sign:
+sign: fix-perm
 	@ssh-keygen -s ${trusted-ca} \
 		-I ${user} \
 		-n ${team} \
@@ -32,7 +32,7 @@ generate-trusted-root-ca:
 generate-trusted-host-cert:
 	@ssh-keygen -t ed25519 -C "root-ca" -f TrustedHost/host_key
 
-sign-trusted-host-cert:
+sign-trusted-host-cert: fix-perm
 	@ssh-keygen \
 		-s ${trusted-ca} \
 		-h \
@@ -55,3 +55,7 @@ create-machine:
 
 remove-machine:
 	vagrant destroy -f
+
+fix-perm:
+	chmod 0400 TrustedCA/root-ca
+	chmod 0400 TrustedHost/host_key
