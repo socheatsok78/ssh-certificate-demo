@@ -14,7 +14,7 @@ write_files:
       HostCertificate /etc/ssh/trusted-host-rsa-cert.pub
 
   # AuthorizedPrincipalsFile
-  - path: /etc/ssh/auth_principals/ubuntu
+  - path: /etc/ssh/auth_principals/vagrant
     content: |
       team-ca
       team-devops
