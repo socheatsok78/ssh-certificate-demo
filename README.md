@@ -4,6 +4,14 @@ If you’re not using SSH certificates you’re doing SSH wrong
 
 ## Guide
 
+**Enable Vagrant Experimental features**
+
+Add the following variable to your `.bashrc` or `.zshrc`
+
+```
+export VAGRANT_EXPERIMENTAL="1"
+```
+
 ### Add `cert-authority` to `known_hosts`
 
 Copy the `root-ca` public key and add it to the `known_hosts` file by append `@cert-authority` and `list-of-host` in front of the public key.
@@ -41,8 +49,7 @@ CASignatureAlgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp52
 **Authenticate with Public Key**
 
 ```log
-Dec 30 03:41:42 ubuntu sshd[1922]: Connection closed by authenticating user vagrant 192.168.56.1 port 50217 [preauth]
-Dec 30 03:43:54 ubuntu sshd[2028]: Accepted publickey for vagrant from 10.0.2.2 port 50253 ssh2: RSA SHA256:LSfV4x3IJ/0vdKO+JI659xoFI8Vyb6sjmTw7y8UdvC0
+Dec 30 09:33:02 ubuntu-focal sshd[1331]: Accepted publickey for vagrant from 10.0.2.2 port 52115 ssh2: RSA SHA256:W9rlwlkM/uLCn8n7/b2BfDR3xwnUDBCVHrjwTC2t7AI
 ```
 
 **Certificate does not contain an authorized principal**
