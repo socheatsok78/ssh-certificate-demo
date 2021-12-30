@@ -26,6 +26,18 @@ sign: fix-perm
 		${HOME}/.ssh/id_ed25519.pub
 	@ssh-keygen -Lf ${HOME}/.ssh/id_ed25519-cert.pub
 
+genkey:
+	@mkdir -p Users/${user}
+	@ssh-keygen -t ed25519 -C ${user} -f Users/${user}/id_ed25519
+
+signkey: fix-perm
+	@ssh-keygen -s ${trusted-ca} \
+		-I ${user} \
+		-n ${team} \
+		-V ${expire} \
+		Users/${user}/id_ed25519.pub
+	@ssh-keygen -Lf Users/${user}/id_ed25519-cert.pub
+
 generate-trusted-root-ca:
 	@ssh-keygen -t ed25519 -C "root-ca" -f ${trusted-ca}
 	@chmod 0400 ${trusted-ca}
