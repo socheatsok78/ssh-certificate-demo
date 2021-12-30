@@ -34,6 +34,22 @@ CASignatureAlgorithms ^ssh-rsa
 CASignatureAlgorithms ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,ssh-ed25519,rsa-sha2-512,rsa-sha2-256,ssh-rsa
 ```
 
+### Logs
+
+**Authenticate with Public Key**
+
+```log
+Dec 30 03:41:42 ubuntu sshd[1922]: Connection closed by authenticating user vagrant 192.168.56.1 port 50217 [preauth]
+Dec 30 03:43:54 ubuntu sshd[2028]: Accepted publickey for vagrant from 10.0.2.2 port 50253 ssh2: RSA SHA256:LSfV4x3IJ/0vdKO+JI659xoFI8Vyb6sjmTw7y8UdvC0
+```
+
+**Certificate does not contain an authorized principal**
+
+```log
+Dec 30 03:44:52 ubuntu sshd[2185]: error: Certificate does not contain an authorized principal
+Dec 30 03:44:52 ubuntu sshd[2185]: Connection closed by authenticating user vagrant 192.168.56.1 port 50269 [preauth]
+```
+
 ## Reference
 
 - https://smallstep.com/blog/use-ssh-certificates/
